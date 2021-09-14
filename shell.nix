@@ -3,12 +3,12 @@
   ...
   android_sdk.accept_license = true;
 } */
-{ pkgs ? import ./pkgs.nix {
+{ pkgs ? import ./nix/pkgs.nix {
     config = {
       allowUnfree = true;
       android_sdk.accept_license = true;
     };
-    overlays = [ (import ./flutter/overlay.nix) ];
+    overlays = [ (import ./nix/flutter/overlay.nix) ];
   } }:
 pkgs.mkShell {
     nativeBuildInputs = with pkgs; [
