@@ -10,8 +10,10 @@
     };
     overlays = [ (import ./nix/flutter/overlay.nix) ];
   } }:
-pkgs.mkShell {
+let merged-openssl = pkgs.symlinkJoin { name = "merged-openssl"; paths = [ pkgs.openssl.out pkgs.openssl.dev ]; };
+in pkgs.mkShell {
     nativeBuildInputs = with pkgs; [
+      rustup
       flutterPackages.dev
       androidStudioPackages.dev
       jdk
@@ -19,6 +21,9 @@ pkgs.mkShell {
       clang
       cmake
       ninja
+      llvm
+      llvmPackages.libclang
+      openssl
       pkg-config
       gnome3.gtk3.dev
       utillinux.dev
@@ -32,6 +37,8 @@ pkgs.mkShell {
       export ANDROID_SDK_ROOT=$ANDROID_HOME
       export FLUTTER_SDK=~/.flutter-sdk
       export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+      export LIBCLANG_PATH="${pkgs.llvmPackages.libclang}/lib"
+      export OPENSSL_DIR="${merged-openssl}"
 
       ln -s $ANDROID_JAVA_HOME ~/Android/Sdk/jre || true
 
