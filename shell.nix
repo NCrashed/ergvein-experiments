@@ -28,6 +28,7 @@ in pkgs.mkShell {
       gnome3.gtk3.dev
       utillinux.dev
       libsepol
+      stdenv.cc
     ];
 
     shellHook=''
