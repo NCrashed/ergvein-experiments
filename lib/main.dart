@@ -14,7 +14,7 @@ class ErgveinApp extends StatelessWidget {
     return MaterialApp(
       title: 'Ergvein',
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.blueGrey,
       ),
       home: const BalancePage(title: 'Ergvein balance page'),
     );
@@ -58,12 +58,24 @@ class _BalancePageState extends State<BalancePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             balanceHeader(theme),
-            const Text(
-              'You have pushed the button HAHA many times:',
-            ),
-            Text(
-              '$_counter',
-              style: theme.textTheme.headline4,
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(15),
+                children: <Widget>[
+                  historyRow(theme, "Grossery", "1 min ago", -221),
+                  historyRow(theme, "Burger payment", "3 hours ago", 1000),
+                  historyRow(theme, "Bar for company", "4 hours ago", -19326),
+                  historyRow(theme, "Salary August", "1 month ago", 364000),
+                  historyRow(theme, "Debt Sergey", "1 month ago", 130000),
+                  historyRow(theme, "Donation", "2 month ago", -7500),
+                  historyRow(theme, "VPN anual", "3 month ago", -54531),
+                  historyRow(theme, "Unknown", "3 month ago", 124),
+                  historyRow(theme, "Salary June", "4 month ago", 345000),
+                  historyRow(theme, "Gift family", "4 month ago", -23456),
+                  historyRow(theme, "Donation", "4 month ago", -45),
+                  historyRow(theme, "Fastfood", "5 month ago", -1000),
+                ],
+              ),
             ),
           ],
         ),
@@ -76,9 +88,57 @@ class _BalancePageState extends State<BalancePage> {
     );
   }
 
+  Container historyRow(
+      ThemeData theme, String description, String time, int amount) {
+    var amountWidget = null;
+    if (amount >= 0) {
+      amountWidget = Text("+$amount sat",
+          style: theme.textTheme.subtitle1?.copyWith(color: theme.accentColor));
+    } else {
+      amountWidget = Text("$amount sat",
+          style: theme.textTheme.subtitle1?.copyWith(color: theme.errorColor));
+    }
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.only(bottom: 15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.check,
+            size: 35,
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  description,
+                  style: theme.textTheme.headline5,
+                ),
+                Text(
+                  time,
+                  style: theme.textTheme.subtitle2
+                      ?.copyWith(color: theme.accentColor),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [amountWidget],
+          ))
+        ],
+      ),
+    );
+  }
+
   Container balanceHeader(ThemeData theme) {
     return Container(
-      color: theme.backgroundColor,
+      color: theme.colorScheme.background.withAlpha(100),
       height: 130,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -87,10 +147,22 @@ class _BalancePageState extends State<BalancePage> {
           Center(
             child: Container(
               margin: const EdgeInsets.only(top: 10.0),
-              child: Text(
-                "23 928 056 sat",
-                style: theme.primaryTextTheme.headline4,
-              ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "23 928 056",
+                      style: theme.textTheme.headline4,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 1),
+                      child: Text(
+                        " sat",
+                        style: theme.textTheme.headline5,
+                      ),
+                    ),
+                  ]),
             ),
           ),
           Row(
@@ -114,7 +186,7 @@ class _BalancePageState extends State<BalancePage> {
       margin: const EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0),
       child: Row(
         children: nullAppend(icon) +
-            [Text(balance, style: theme.primaryTextTheme.headline6)],
+            [Text(balance, style: theme.textTheme.headline6)],
       ),
     );
   }
