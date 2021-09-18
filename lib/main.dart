@@ -62,7 +62,7 @@ class _BalancePageState extends State<BalancePage> {
               child: ListView(
                 padding: const EdgeInsets.all(15),
                 children: <Widget>[
-                  historyRow(theme, "Grossery", "1 min ago", -221),
+                  historyRow(theme, "Grocery", "1 min ago", -221),
                   historyRow(theme, "Burger payment", "3 hours ago", 1000),
                   historyRow(theme, "Bar for company", "4 hours ago", -19326),
                   historyRow(theme, "Salary August", "1 month ago", 364000),
@@ -153,7 +153,8 @@ class _BalancePageState extends State<BalancePage> {
                   children: [
                     Text(
                       "23 928 056",
-                      style: theme.textTheme.headline4,
+                      style: theme.textTheme.headline4
+                          ?.copyWith(color: theme.colorScheme.onSurface),
                     ),
                     Container(
                       margin: const EdgeInsets.only(bottom: 1),
@@ -168,11 +169,18 @@ class _BalancePageState extends State<BalancePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              subBalance(theme, "7 215 100 sat", icon: Icon(Icons.bolt)),
+              subBalance(theme, "7 215 100 sat",
+                  icon: Icon(
+                    Icons.bolt,
+                    color: theme.colorScheme.secondaryVariant,
+                  )),
               subBalance(theme, "2 452 201 sat",
                   icon: Container(
                     margin: const EdgeInsets.only(right: 5.0),
-                    child: Icon(Icons.waves),
+                    child: Icon(
+                      Icons.waves,
+                      color: theme.colorScheme.secondaryVariant,
+                    ),
                   )),
             ],
           )
@@ -186,7 +194,11 @@ class _BalancePageState extends State<BalancePage> {
       margin: const EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0),
       child: Row(
         children: nullAppend(icon) +
-            [Text(balance, style: theme.textTheme.headline6)],
+            [
+              Text(balance,
+                  style: theme.textTheme.headline6
+                      ?.copyWith(color: theme.colorScheme.secondaryVariant))
+            ],
       ),
     );
   }
