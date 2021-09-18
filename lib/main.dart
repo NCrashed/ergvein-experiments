@@ -83,7 +83,7 @@ class _BalancePageState extends State<BalancePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.touch_app),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
@@ -178,7 +178,7 @@ class _BalancePageState extends State<BalancePage> {
                   icon: Container(
                     margin: const EdgeInsets.only(right: 5.0),
                     child: Icon(
-                      Icons.waves,
+                      Icons.donut_large_sharp,
                       color: theme.colorScheme.secondaryVariant,
                     ),
                   )),
