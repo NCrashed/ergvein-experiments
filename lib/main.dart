@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'list.dart';
 
 void main() {
   runApp(const ErgveinApp());
@@ -56,45 +57,7 @@ class _BalancePageState extends State<BalancePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Container(
-              color: theme.backgroundColor,
-              height: 130,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Center(
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        "23 928 056 sat",
-                        style: theme.primaryTextTheme.headline4,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      subBalance(theme),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10.0, right: 10.0, top: 20.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(right: 5.0),
-                              child: Icon(Icons.waves),
-                            ),
-                            Text("2 452 201 sat",
-                                style: theme.primaryTextTheme.headline6),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
+            balanceHeader(theme),
             const Text(
               'You have pushed the button HAHA many times:',
             ),
@@ -113,14 +76,45 @@ class _BalancePageState extends State<BalancePage> {
     );
   }
 
-  Container subBalance(ThemeData theme) {
+  Container balanceHeader(ThemeData theme) {
+    return Container(
+      color: theme.backgroundColor,
+      height: 130,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                "23 928 056 sat",
+                style: theme.primaryTextTheme.headline4,
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              subBalance(theme, "7 215 100 sat", icon: Icon(Icons.bolt)),
+              subBalance(theme, "2 452 201 sat",
+                  icon: Container(
+                    margin: const EdgeInsets.only(right: 5.0),
+                    child: Icon(Icons.waves),
+                  )),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Container subBalance(ThemeData theme, String balance, {Widget? icon}) {
     return Container(
       margin: const EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0),
       child: Row(
-        children: [
-          Icon(Icons.bolt),
-          Text("7 215 100 sat", style: theme.primaryTextTheme.headline6)
-        ],
+        children: nullAppend(icon) +
+            [Text(balance, style: theme.primaryTextTheme.headline6)],
       ),
     );
   }
