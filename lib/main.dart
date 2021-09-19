@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'list.dart';
+import 'icon/icons.dart';
+import 'icon/widget.dart';
 
 void main() {
   runApp(const ErgveinApp());
@@ -62,18 +64,19 @@ class _BalancePageState extends State<BalancePage> {
               child: ListView(
                 padding: const EdgeInsets.all(15),
                 children: <Widget>[
-                  historyRow(theme, "Grocery", "1 min ago", -221),
-                  historyRow(theme, "Burger payment", "3 hours ago", 1000),
-                  historyRow(theme, "Bar for company", "4 hours ago", -19326),
-                  historyRow(theme, "Salary August", "1 month ago", 364000),
-                  historyRow(theme, "Debt Sergey", "1 month ago", 130000),
-                  historyRow(theme, "Donation", "2 month ago", -7500),
-                  historyRow(theme, "VPN anual", "3 month ago", -54531),
-                  historyRow(theme, "Unknown", "3 month ago", 124),
-                  historyRow(theme, "Salary June", "4 month ago", 345000),
-                  historyRow(theme, "Gift family", "4 month ago", -23456),
-                  historyRow(theme, "Donation", "4 month ago", -45),
-                  historyRow(theme, "Fastfood", "5 month ago", -1000),
+                  historyRow(theme, "Grocery", "1 min ago", -221, 0),
+                  historyRow(theme, "Burger payment", "3 hours ago", 1000, 2),
+                  historyRow(
+                      theme, "Bar for company", "4 hours ago", -19326, 6),
+                  historyRow(theme, "Salary August", "1 month ago", 364000, 6),
+                  historyRow(theme, "Debt Sergey", "1 month ago", 130000, 6),
+                  historyRow(theme, "Donation", "2 month ago", -7500, 6),
+                  historyRow(theme, "VPN anual", "3 month ago", -54531, 6),
+                  historyRow(theme, "Unknown", "3 month ago", 124, 7),
+                  historyRow(theme, "Salary June", "4 month ago", 345000, 6),
+                  historyRow(theme, "Gift family", "4 month ago", -23456, 6),
+                  historyRow(theme, "Donation", "4 month ago", -45, 6),
+                  historyRow(theme, "Fastfood", "5 month ago", -1000, 6),
                 ],
               ),
             ),
@@ -88,8 +91,8 @@ class _BalancePageState extends State<BalancePage> {
     );
   }
 
-  Container historyRow(
-      ThemeData theme, String description, String time, int amount) {
+  Container historyRow(ThemeData theme, String description, String time,
+      int amount, int confirmations) {
     var amountWidget = null;
     if (amount >= 0) {
       amountWidget = Text("+$amount sat",
@@ -98,16 +101,40 @@ class _BalancePageState extends State<BalancePage> {
       amountWidget = Text("$amount sat",
           style: theme.textTheme.subtitle1?.copyWith(color: theme.errorColor));
     }
+    var confirmationIcon = null;
+    if (confirmations > 3) {
+      confirmationIcon = Icon(
+        Icons.check,
+        size: 35,
+      );
+    } else if (confirmations == 3) {
+      confirmationIcon = Icon(
+        ErgveinIcons.confirm_three,
+        size: 35,
+      );
+    } else if (confirmations == 2) {
+      confirmationIcon = Icon(
+        ErgveinIcons.confirm_two,
+        size: 35,
+      );
+    } else if (confirmations == 1) {
+      confirmationIcon = Icon(
+        ErgveinIcons.confirm_one,
+        size: 35,
+      );
+    } else if (confirmations == 0) {
+      confirmationIcon = Icon(
+        ErgveinIcons.unconfirmed,
+        size: 35,
+      );
+    }
     return Container(
       height: 50,
       margin: const EdgeInsets.only(bottom: 15.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(
-            Icons.check,
-            size: 35,
-          ),
+          confirmationIcon,
           Container(
             margin: const EdgeInsets.only(left: 10.0),
             child: Column(
@@ -178,7 +205,7 @@ class _BalancePageState extends State<BalancePage> {
                   icon: Container(
                     margin: const EdgeInsets.only(right: 5.0),
                     child: Icon(
-                      Icons.donut_large_sharp,
+                      ErgveinIcons.blockstream,
                       color: theme.colorScheme.secondaryVariant,
                     ),
                   )),
