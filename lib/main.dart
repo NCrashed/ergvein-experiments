@@ -23,6 +23,112 @@ class ErgveinApp extends StatelessWidget {
   }
 }
 
+/// Captures different types of payments like onchain, lightning or liquid.
+abstract class PaymentType {
+  /// Payment type meant to be used as immutable data
+  const PaymentType();
+
+  /// Get icon widget that is displayed for payment history.
+  Widget icon();
+
+  /// Small icon that indicates payment type
+  Widget? subtitle_icon(ThemeData theme);
+}
+
+class OnchainPayment extends PaymentType {
+  final int confirmations;
+
+  const OnchainPayment({required this.confirmations}) : super();
+
+  @override
+  Widget icon() {
+    if (this.confirmations == 0) {
+      return Icon(
+        ErgveinIcons.unconfirmed,
+        size: 35,
+      );
+    } else if (this.confirmations == 1) {
+      return Icon(
+        ErgveinIcons.confirm_one,
+        size: 35,
+      );
+    } else if (this.confirmations == 2) {
+      return Icon(
+        ErgveinIcons.confirm_two,
+        size: 35,
+      );
+    } else if (this.confirmations == 3) {
+      return Icon(
+        ErgveinIcons.confirm_three,
+        size: 35,
+      );
+    } else {
+      return Icon(
+        Icons.check,
+        size: 35,
+      );
+    }
+  }
+
+  @override
+  Widget? subtitle_icon(ThemeData theme) {
+    return null;
+  }
+}
+
+class LightningPayment extends PaymentType {
+  const LightningPayment() : super();
+
+  @override
+  Widget icon() {
+    return Icon(
+      Icons.check,
+      size: 35,
+    );
+  }
+
+  @override
+  Widget? subtitle_icon(ThemeData theme) {
+    return Icon(
+      Icons.bolt,
+      color: theme.colorScheme.secondaryVariant,
+    );
+  }
+}
+
+class LiquidPayment extends PaymentType {
+  final int confirmations;
+
+  const LiquidPayment({required this.confirmations}) : super();
+
+  @override
+  Widget icon() {
+    if (this.confirmations == 0) {
+      return Icon(
+        ErgveinIcons.unconfirmed,
+        size: 35,
+      );
+    } else {
+      return Icon(
+        Icons.check,
+        size: 35,
+      );
+    }
+  }
+
+  @override
+  Widget? subtitle_icon(ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.only(left: 7, top: 3, bottom: 3),
+      child: Icon(
+        ErgveinIcons.blockstream,
+        color: theme.colorScheme.secondaryVariant,
+        size: 20,
+      ),
+    );
+  }
+}
+
 class BalancePage extends StatefulWidget {
   const BalancePage({Key? key, required this.title}) : super(key: key);
 
@@ -64,19 +170,32 @@ class _BalancePageState extends State<BalancePage> {
               child: ListView(
                 padding: const EdgeInsets.all(15),
                 children: <Widget>[
-                  historyRow(theme, "Grocery", "1 min ago", -221, 0),
-                  historyRow(theme, "Burger payment", "3 hours ago", 1000, 2),
+                  historyRow(theme, "Grocery", "1 min ago", -221,
+                      OnchainPayment(confirmations: 0)),
+                  historyRow(theme, "Repair cable", "25 min ago", -4500,
+                      OnchainPayment(confirmations: 1)),
+                  historyRow(theme, "Burger payment", "3 hours ago", 1000,
+                      LightningPayment()),
+                  historyRow(theme, "Bar for company", "4 hours ago", -19326,
+                      LiquidPayment(confirmations: 10)),
+                  historyRow(theme, "Salary August", "1 month ago", 364000,
+                      OnchainPayment(confirmations: 100)),
+                  historyRow(theme, "Debt Sergey", "1 month ago", 130000,
+                      LiquidPayment(confirmations: 100)),
+                  historyRow(theme, "Donation", "2 month ago", -7500,
+                      LightningPayment()),
+                  historyRow(theme, "VPN anual", "3 month ago", -54531,
+                      OnchainPayment(confirmations: 100)),
                   historyRow(
-                      theme, "Bar for company", "4 hours ago", -19326, 6),
-                  historyRow(theme, "Salary August", "1 month ago", 364000, 6),
-                  historyRow(theme, "Debt Sergey", "1 month ago", 130000, 6),
-                  historyRow(theme, "Donation", "2 month ago", -7500, 6),
-                  historyRow(theme, "VPN anual", "3 month ago", -54531, 6),
-                  historyRow(theme, "Unknown", "3 month ago", 124, 7),
-                  historyRow(theme, "Salary June", "4 month ago", 345000, 6),
-                  historyRow(theme, "Gift family", "4 month ago", -23456, 6),
-                  historyRow(theme, "Donation", "4 month ago", -45, 6),
-                  historyRow(theme, "Fastfood", "5 month ago", -1000, 6),
+                      theme, "Unknown", "3 month ago", 124, LightningPayment()),
+                  historyRow(theme, "Salary June", "4 month ago", 345000,
+                      OnchainPayment(confirmations: 100)),
+                  historyRow(theme, "Gift family", "4 month ago", -23456,
+                      OnchainPayment(confirmations: 100)),
+                  historyRow(theme, "Donation", "4 month ago", -45,
+                      LightningPayment()),
+                  historyRow(theme, "Fastfood", "5 month ago", -1000,
+                      LightningPayment()),
                 ],
               ),
             ),
@@ -92,7 +211,7 @@ class _BalancePageState extends State<BalancePage> {
   }
 
   Container historyRow(ThemeData theme, String description, String time,
-      int amount, int confirmations) {
+      int amount, PaymentType paymentType) {
     var amountWidget = null;
     if (amount >= 0) {
       amountWidget = Text("+$amount sat",
@@ -101,54 +220,34 @@ class _BalancePageState extends State<BalancePage> {
       amountWidget = Text("$amount sat",
           style: theme.textTheme.subtitle1?.copyWith(color: theme.errorColor));
     }
-    var confirmationIcon = null;
-    if (confirmations > 3) {
-      confirmationIcon = Icon(
-        Icons.check,
-        size: 35,
-      );
-    } else if (confirmations == 3) {
-      confirmationIcon = Icon(
-        ErgveinIcons.confirm_three,
-        size: 35,
-      );
-    } else if (confirmations == 2) {
-      confirmationIcon = Icon(
-        ErgveinIcons.confirm_two,
-        size: 35,
-      );
-    } else if (confirmations == 1) {
-      confirmationIcon = Icon(
-        ErgveinIcons.confirm_one,
-        size: 35,
-      );
-    } else if (confirmations == 0) {
-      confirmationIcon = Icon(
-        ErgveinIcons.unconfirmed,
-        size: 35,
-      );
-    }
+
     return Container(
-      height: 50,
+      height: 55,
       margin: const EdgeInsets.only(bottom: 15.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          confirmationIcon,
+          paymentType.icon(),
           Container(
             margin: const EdgeInsets.only(left: 10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Text(
                   description,
                   style: theme.textTheme.headline5,
                 ),
-                Text(
-                  time,
-                  style: theme.textTheme.subtitle2
-                      ?.copyWith(color: theme.accentColor),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                        Text(
+                          time,
+                          style: theme.textTheme.subtitle2
+                              ?.copyWith(color: theme.accentColor),
+                        ),
+                      ] +
+                      nullAppend(paymentType.subtitle_icon(theme)),
                 ),
               ],
             ),
