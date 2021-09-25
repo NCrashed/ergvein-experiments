@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'list.dart';
 import 'icon/icons.dart';
-import 'icon/widget.dart';
+import 'package:window_size/window_size.dart';
+import 'dart:io';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowTitle('App title');
+    setWindowMinSize(const Size(350, 300));
+    setWindowMaxSize(Size.infinite);
+  }
   runApp(const ErgveinApp());
 }
 
@@ -32,7 +39,7 @@ abstract class PaymentType {
   Widget icon();
 
   /// Small icon that indicates payment type
-  Widget? subtitle_icon(ThemeData theme);
+  Widget? subtitleIcon(ThemeData theme);
 }
 
 class OnchainPayment extends PaymentType {
@@ -42,28 +49,28 @@ class OnchainPayment extends PaymentType {
 
   @override
   Widget icon() {
-    if (this.confirmations == 0) {
-      return Icon(
+    if (confirmations == 0) {
+      return const Icon(
         ErgveinIcons.unconfirmed,
         size: 35,
       );
-    } else if (this.confirmations == 1) {
-      return Icon(
-        ErgveinIcons.confirm_one,
+    } else if (confirmations == 1) {
+      return const Icon(
+        ErgveinIcons.confirmOne,
         size: 35,
       );
-    } else if (this.confirmations == 2) {
-      return Icon(
-        ErgveinIcons.confirm_two,
+    } else if (confirmations == 2) {
+      return const Icon(
+        ErgveinIcons.confirmTwo,
         size: 35,
       );
-    } else if (this.confirmations == 3) {
-      return Icon(
-        ErgveinIcons.confirm_three,
+    } else if (confirmations == 3) {
+      return const Icon(
+        ErgveinIcons.confirmThree,
         size: 35,
       );
     } else {
-      return Icon(
+      return const Icon(
         Icons.check,
         size: 35,
       );
@@ -71,7 +78,7 @@ class OnchainPayment extends PaymentType {
   }
 
   @override
-  Widget? subtitle_icon(ThemeData theme) {
+  Widget? subtitleIcon(ThemeData theme) {
     return null;
   }
 }
@@ -81,14 +88,14 @@ class LightningPayment extends PaymentType {
 
   @override
   Widget icon() {
-    return Icon(
+    return const Icon(
       Icons.check,
       size: 35,
     );
   }
 
   @override
-  Widget? subtitle_icon(ThemeData theme) {
+  Widget? subtitleIcon(ThemeData theme) {
     return Icon(
       Icons.bolt,
       color: theme.colorScheme.secondaryVariant,
@@ -103,13 +110,13 @@ class LiquidPayment extends PaymentType {
 
   @override
   Widget icon() {
-    if (this.confirmations == 0) {
-      return Icon(
+    if (confirmations == 0) {
+      return const Icon(
         ErgveinIcons.unconfirmed,
         size: 35,
       );
     } else {
-      return Icon(
+      return const Icon(
         Icons.check,
         size: 35,
       );
@@ -117,7 +124,7 @@ class LiquidPayment extends PaymentType {
   }
 
   @override
-  Widget? subtitle_icon(ThemeData theme) {
+  Widget? subtitleIcon(ThemeData theme) {
     return Container(
       margin: const EdgeInsets.only(left: 7, top: 3, bottom: 3),
       child: Icon(
@@ -139,24 +146,16 @@ class BalancePage extends StatefulWidget {
 }
 
 class _BalancePageState extends State<BalancePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("main wallet"),
+        title: const Text("main wallet"),
         leading: GestureDetector(
           onTap: () {/* Write listener code here */},
-          child: Icon(
+          child: const Icon(
             Icons.menu,
           ),
         ),
@@ -171,31 +170,31 @@ class _BalancePageState extends State<BalancePage> {
                 padding: const EdgeInsets.all(15),
                 children: <Widget>[
                   historyRow(theme, "Grocery", "1 min ago", -221,
-                      OnchainPayment(confirmations: 0)),
+                      const OnchainPayment(confirmations: 0)),
                   historyRow(theme, "Repair cable", "25 min ago", -4500,
-                      OnchainPayment(confirmations: 1)),
+                      const OnchainPayment(confirmations: 1)),
                   historyRow(theme, "Burger payment", "3 hours ago", 1000,
-                      LightningPayment()),
+                      const LightningPayment()),
                   historyRow(theme, "Bar for company", "4 hours ago", -19326,
-                      LiquidPayment(confirmations: 10)),
+                      const LiquidPayment(confirmations: 10)),
                   historyRow(theme, "Salary August", "1 month ago", 364000,
-                      OnchainPayment(confirmations: 100)),
+                      const OnchainPayment(confirmations: 100)),
                   historyRow(theme, "Debt Sergey", "1 month ago", 130000,
-                      LiquidPayment(confirmations: 100)),
+                      const LiquidPayment(confirmations: 100)),
                   historyRow(theme, "Donation", "2 month ago", -7500,
-                      LightningPayment()),
+                      const LightningPayment()),
                   historyRow(theme, "VPN anual", "3 month ago", -54531,
-                      OnchainPayment(confirmations: 100)),
-                  historyRow(
-                      theme, "Unknown", "3 month ago", 124, LightningPayment()),
+                      const OnchainPayment(confirmations: 100)),
+                  historyRow(theme, "Unknown", "3 month ago", 124,
+                      const LightningPayment()),
                   historyRow(theme, "Salary June", "4 month ago", 345000,
-                      OnchainPayment(confirmations: 100)),
+                      const OnchainPayment(confirmations: 100)),
                   historyRow(theme, "Gift family", "4 month ago", -23456,
-                      OnchainPayment(confirmations: 100)),
+                      const OnchainPayment(confirmations: 100)),
                   historyRow(theme, "Donation", "4 month ago", -45,
-                      LightningPayment()),
+                      const LightningPayment()),
                   historyRow(theme, "Fastfood", "5 month ago", -1000,
-                      LightningPayment()),
+                      const LightningPayment()),
                 ],
               ),
             ),
@@ -203,7 +202,7 @@ class _BalancePageState extends State<BalancePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {},
         tooltip: 'Increment',
         child: const Icon(Icons.touch_app),
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -212,17 +211,18 @@ class _BalancePageState extends State<BalancePage> {
 
   Container historyRow(ThemeData theme, String description, String time,
       int amount, PaymentType paymentType) {
-    var amountWidget = null;
+    Text amountWidget;
     if (amount >= 0) {
       amountWidget = Text("+$amount sat",
-          style: theme.textTheme.subtitle1?.copyWith(color: theme.accentColor));
+          style: theme.textTheme.subtitle1
+              ?.copyWith(color: theme.colorScheme.secondary));
     } else {
       amountWidget = Text("$amount sat",
           style: theme.textTheme.subtitle1?.copyWith(color: theme.errorColor));
     }
 
     return Container(
-      height: 55,
+      height: 58,
       margin: const EdgeInsets.only(bottom: 15.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -244,10 +244,10 @@ class _BalancePageState extends State<BalancePage> {
                         Text(
                           time,
                           style: theme.textTheme.subtitle2
-                              ?.copyWith(color: theme.accentColor),
+                              ?.copyWith(color: theme.colorScheme.secondary),
                         ),
                       ] +
-                      nullAppend(paymentType.subtitle_icon(theme)),
+                      nullAppend(paymentType.subtitleIcon(theme)),
                 ),
               ],
             ),
