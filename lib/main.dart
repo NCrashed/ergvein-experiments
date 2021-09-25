@@ -7,7 +7,7 @@ import 'dart:io';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowTitle('App title');
+    setWindowTitle('Ergvein wallet');
     setWindowMinSize(const Size(350, 300));
     setWindowMaxSize(Size.infinite);
   }
